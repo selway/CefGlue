@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
 using Xilium.CefGlue.Common.Handlers;
+using Xilium.CefGlue.Common.Platform;
 using Xilium.CefGlue.Common.Shared;
 
 namespace Xilium.CefGlue.Common
@@ -89,7 +90,10 @@ namespace Xilium.CefGlue.Common
                 flags = (flags ?? []).Append(KeyValuePair.Create("disable-features", "FirstPartySets")).ToArray();
             }
             
-            CefRuntime.Initialize(new CefMainArgs(new[] { exeFileName }), settings, new BrowserCefApp(customSchemes, flags, browserProcessHandler), IntPtr.Zero);
+            using (new LinuxSignalHandlerScope())
+            {
+                CefRuntime.Initialize(new CefMainArgs(new[] { exeFileName }), settings, new BrowserCefApp(customSchemes, flags, browserProcessHandler), IntPtr.Zero);
+            }
 
             if (customSchemes != null)
             {
