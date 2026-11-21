@@ -1,5 +1,6 @@
 using System;
 using Xilium.CefGlue.Avalonia.Platform;
+using Xilium.CefGlue.Avalonia.Platform.Linux;
 using Xilium.CefGlue.Common;
 using Xilium.CefGlue.Common.Platform;
 
@@ -14,6 +15,11 @@ namespace Xilium.CefGlue.Avalonia
         {
             if ((CefRuntime.Platform == CefRuntimePlatform.MacOS || CefRuntime.Platform == CefRuntimePlatform.Linux) && !CefRuntimeLoader.IsLoaded)
             {
+                if (CefRuntime.Platform == CefRuntimePlatform.Linux)
+                {
+                    LinuxNativeLibraryLoader.PreloadHarfBuzz();
+                }
+
                 var browserProcessHandler = new AvaloniaBrowserProcessHandler();
                 CefRuntimeLoader.Load(browserProcessHandler);
                 if (CefRuntime.Platform == CefRuntimePlatform.Linux)
