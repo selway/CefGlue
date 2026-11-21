@@ -63,7 +63,15 @@ namespace Xilium.CefGlue.Common
                 
                 case CefRuntimePlatform.Linux:
                     settings.NoSandbox = true;
-                    settings.MultiThreadedMessageLoop = true;
+                    if (browserProcessHandler != null)
+                    {
+                        settings.MultiThreadedMessageLoop = false;
+                        settings.ExternalMessagePump = false;
+                    }
+                    else
+                    {
+                        settings.MultiThreadedMessageLoop = true;
+                    }
                     break;
             }
 

@@ -40,25 +40,40 @@ namespace Xilium.CefGlue.Avalonia
 
             if (!int.TryParse(configured, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intervalMs))
             {
-                return DefaultPumpIntervalMs;
+                return CefRuntime.Platform == CefRuntimePlatform.Linux
+                    ? MinPumpIntervalMs
+                    : DefaultPumpIntervalMs;
             }
 
             return Math.Clamp(intervalMs, MinPumpIntervalMs, MaxPumpIntervalMs);
         }
 
-        protected override void OnScheduleMessagePumpWork(long delayMs)
+        private static void PumpMessageLoopWork()
+        {
+            if (CefRuntime.IsInitialized)
+            {
+                CefRuntime.DoMessageLoopWork();
+            }
+        }
+
+        internal void StartPump()
         {
             lock (_schedule)
             {
                 if (_pump == null)
                 {
                     _pump = new Timer(
-                        _ => Dispatcher.UIThread.Post(CefRuntime.DoMessageLoopWork, DispatcherPriority.Default),
+                        _ => Dispatcher.UIThread.Post(PumpMessageLoopWork, DispatcherPriority.Default),
                         null,
                         PumpIntervalMs,
                         PumpIntervalMs);
                 }
             }
+        }
+
+        protected override void OnScheduleMessagePumpWork(long delayMs)
+        {
+            StartPump();
 
             if (delayMs > 0)
             {
@@ -81,7 +96,7 @@ namespace Xilium.CefGlue.Avalonia
                 {
                     // Cleared first, so work scheduled from inside the pump queues a new one.
                     Volatile.Write(ref _immediatePumpQueued, 0);
-                    CefRuntime.DoMessageLoopWork();
+                    PumpMessageLoopWork();
                 },
                 DispatcherPriority.Default);
         }
