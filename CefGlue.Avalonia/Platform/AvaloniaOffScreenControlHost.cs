@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Collections;
@@ -165,7 +165,11 @@ namespace Xilium.CefGlue.Avalonia.Platform
 
         private void OnPointerExited(object sender, PointerEventArgs e)
         {
-            MouseLeave?.Invoke(e.AsCefMouseEvent(MousePositionReferential));
+            // Taking pointer capture can raise PointerExited while the pointer is still inside the browser.
+            if (e.Pointer.Captured != _control)
+            {
+                MouseLeave?.Invoke(e.AsCefMouseEvent(MousePositionReferential));
+            }
         }
 
         private void OnPointerMoved(object sender, PointerEventArgs e)
@@ -184,7 +188,8 @@ namespace Xilium.CefGlue.Avalonia.Platform
             _previousCursor = null;
             _currentDragCursor = null;
             _windowStateChangedObservable?.Dispose();
-            VisibilityChanged(false);
+            _windowStateChangedObservable = null;
+            VisibilityChanged?.Invoke(false);
         }
 
         private void OnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
@@ -192,6 +197,7 @@ namespace Xilium.CefGlue.Avalonia.Platform
             VisibilityChanged?.Invoke(true);
             if (e.RootVisual is Window newWindow)
             {
+                _windowStateChangedObservable?.Dispose();
                 _windowStateChangedObservable = newWindow.GetPropertyChangedObservable(Window.WindowStateProperty).Subscribe(OnHostWindowStateChanged);
             }
 
