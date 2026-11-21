@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Avalonia Demo (Debug - Partial Build)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-demo-avalonia",
+      "program": "${workspaceFolder}/CefGlue.Demo.Avalonia/bin/x64/Debug/net10.0/Xilium.CefGlue.Demo.Avalonia.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/CefGlue.Demo.Avalonia/bin/x64/Debug/net10.0",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    },
+    {
+      "name": "Avalonia Demo (Debug - Clean Build)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "clean-build-demo-avalonia",
+      "program": "${workspaceFolder}/CefGlue.Demo.Avalonia/bin/x64/Debug/net10.0/Xilium.CefGlue.Demo.Avalonia.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/CefGlue.Demo.Avalonia/bin/x64/Debug/net10.0",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    }
+  ]
+}
