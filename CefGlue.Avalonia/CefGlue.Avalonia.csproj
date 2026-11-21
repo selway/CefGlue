@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>$(DotnetVersion)</TargetFramework>
@@ -21,7 +21,6 @@
   <ItemGroup>
     <PackageReference PrivateAssets="all" Include="Avalonia" />
     <PackageReference Include="AvaloniaUI.DiagnosticsSupport" />
-    <PackageReference Include="ReactiveUI.Avalonia" />
   </ItemGroup>
 
   <ItemGroup>

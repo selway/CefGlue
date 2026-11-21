@@ -1,8 +1,6 @@
 using System;
 using System.Globalization;
-using System.Reactive.Linq;
 using System.Threading;
-using ReactiveUI.Avalonia;
 using Avalonia.Threading;
 using Xilium.CefGlue.Common.Handlers;
 
@@ -54,10 +52,11 @@ namespace Xilium.CefGlue.Avalonia
             {
                 if (_pump == null)
                 {
-                    _pump = Observable.Interval(TimeSpan.FromMilliseconds(PumpIntervalMs)).ObserveOn(AvaloniaScheduler.Instance).Subscribe((i) =>
-                    {
-                        CefRuntime.DoMessageLoopWork();
-                    });
+                    _pump = new Timer(
+                        _ => Dispatcher.UIThread.Post(CefRuntime.DoMessageLoopWork, DispatcherPriority.Default),
+                        null,
+                        PumpIntervalMs,
+                        PumpIntervalMs);
                 }
             }
 
