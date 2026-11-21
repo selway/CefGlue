@@ -2,23 +2,28 @@
 <Project>
     <Import Project="CefGlue.Packages.props" />
 
+    <PropertyGroup>
+        <_ResolvedArch Condition="'$(Platform)' == 'ARM64'">arm64</_ResolvedArch>
+        <_ResolvedArch Condition="'$(Platform)' == 'x64'">x64</_ResolvedArch>
+        <_ResolvedArch Condition="'$(_ResolvedArch)' == '' and '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">arm64</_ResolvedArch>
+        <_ResolvedArch Condition="'$(_ResolvedArch)' == ''">x64</_ResolvedArch>
+    </PropertyGroup>
+
     <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-        <CefGlueTargetPlatform Condition="'$(Platform)' == 'x64'">win-x64</CefGlueTargetPlatform>
-        <CefGlueTargetPlatform Condition="'$(Platform)' == 'ARM64'">win-arm64</CefGlueTargetPlatform>
+        <CefGlueTargetPlatform>win-$(_ResolvedArch)</CefGlueTargetPlatform>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-        <CefGlueTargetPlatform Condition="'$(Platform)' == 'x64'">linux-x64</CefGlueTargetPlatform>
-        <CefGlueTargetPlatform Condition="'$(Platform)' == 'ARM64'">linux-arm64</CefGlueTargetPlatform>
+        <CefGlueTargetPlatform>linux-$(_ResolvedArch)</CefGlueTargetPlatform>
     </PropertyGroup>
     
     <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-        <CefGlueTargetPlatform Condition="'$(Platform)' == 'x64'">osx-x64</CefGlueTargetPlatform>
-        <CefGlueTargetPlatform Condition="'$(Platform)' == 'ARM64'">osx-arm64</CefGlueTargetPlatform>
+        <CefGlueTargetPlatform>osx-$(_ResolvedArch)</CefGlueTargetPlatform>
     </PropertyGroup>
 
     <PropertyGroup>
-        <BrowserProcessDir>$(MSBuildThisFileDirectory)CefGlue.BrowserProcess\bin\$(Platform)\$(Configuration)\$(DotnetVersion)</BrowserProcessDir>
+        <BrowserProcessDir Condition="'$(Platform)' == '' or '$(Platform)' == 'AnyCPU'">$(MSBuildThisFileDirectory)CefGlue.BrowserProcess\bin\$(Configuration)\$(DotnetVersion)</BrowserProcessDir>
+        <BrowserProcessDir Condition="'$(BrowserProcessDir)' == ''">$(MSBuildThisFileDirectory)CefGlue.BrowserProcess\bin\$(Platform)\$(Configuration)\$(DotnetVersion)</BrowserProcessDir>
         <RuntimeIdentifiers>osx-x64;osx-arm64;win-x64;win-arm64;linux-x64;linux-arm64</RuntimeIdentifiers>
     </PropertyGroup>
 

@@ -32,7 +32,7 @@
         <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Platform)' == '' or '$(Platform)' == 'x64'">
+    <PropertyGroup Condition="'$(Platform)' == '' or '$(Platform)' == 'AnyCPU' or '$(Platform)' == 'x64'">
         <ArchitectureConfig>x64</ArchitectureConfig>
         <PackageSuffix />
     </PropertyGroup>
