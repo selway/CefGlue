@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using CefGlue.Tests.CustomSchemes;
@@ -42,7 +42,9 @@ namespace CefGlue.Tests.RequestContext
         [Test]
         public async Task CefRequestContextApplied()
         {
-            const string cachePath = @"C:/path/to/cache";
+            var cachePath = OperatingSystem.IsWindows()
+                ? @"C:/path/to/cache"
+                : Path.Combine(Path.GetTempPath(), "cefglue-test-cache");
             var browserFactory = () => new AvaloniaCefBrowser(() => CefRequestContext.CreateContext(new CefRequestContextSettings()
             {
                 CachePath = cachePath,
